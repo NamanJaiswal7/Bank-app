@@ -1,0 +1,87 @@
+# ========================
+# Server Configuration
+# ========================
+server:
+  port: 8080
+
+# ========================
+# Spring Configuration
+# ========================
+spring:
+  application:
+    name: bank-app
+
+  # JPA / Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  # H2 Database
+  datasource:
+    url: jdbc:h2:mem:bankdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # H2 Console (dev only)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+
+  # Jackson
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+# ========================
+# External Service
+# ========================
+external:
+  validation:
+    url: https://httpstat.us/200
+    timeout-ms: 5000
+
+# ========================
+# Resilience4j Circuit Breaker
+# ========================
+resilience4j:
+  circuitbreaker:
+    instances:
+      externalValidation:
+        register-health-indicator: true
+        sliding-window-size: 5
+        minimum-number-of-calls: 3
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 2
+        sliding-window-type: COUNT_BASED
+
+# ========================
+# Actuator
+# ========================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+# ========================
+# Logging
+# ========================
+logging:
+  level:
+    com.bank: DEBUG
+    org.hibernate.SQL: WARN
+    org.springframework.web: INFO
