@@ -1,0 +1,16 @@
+package com.bank.adapter.in.web.dto;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+
+@Getter @NoArgsConstructor @AllArgsConstructor
+public class ExchangeRequest {
+    @NotNull private Long sourceAccountId;
+    @NotNull private Long targetAccountId;
+    @NotNull @Positive private BigDecimal amount;
+}
