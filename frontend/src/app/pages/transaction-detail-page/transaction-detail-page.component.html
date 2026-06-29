@@ -1,0 +1,89 @@
+<div class="detail-page-container" *ngIf="transaction$ | async as tx">
+  
+  <!-- Back Button & Header -->
+  <div class="detail-header">
+    <button [routerLink]="['/account', tx.accountId]" class="btn-aura-secondary">
+      <i class="bi bi-arrow-left"></i> Back to Account
+    </button>
+    <h1 class="page-title">Receipt <span class="glow-text">#{{ tx.id }}</span></h1>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading$ | async">
+    <div class="spinner"></div>
+    <p>Loading transaction details...</p>
+  </div>
+
+  <!-- Error Alert -->
+  <div class="error-alert glass-panel" *ngIf="error$ | async as error">
+    <span class="error-icon"><i class="bi bi-exclamation-triangle"></i></span>
+    <span class="error-message">{{ error }}</span>
+  </div>
+
+  <!-- Receipt Card -->
+  <div class="receipt-card glass-panel" *ngIf="!(loading$ | async)">
+    <div class="receipt-glow"></div>
+    <div class="receipt-header">
+      <div class="brand-logo">
+        <span class="logo-icon"><i class="bi bi-wallet2"></i></span>
+        <span class="logo-text">AURA<span class="logo-light">BANK</span></span>
+      </div>
+      <span class="status-badge"><i class="bi bi-patch-check-fill"></i> Success</span>
+    </div>
+
+    <!-- Amount Banner -->
+    <div class="receipt-amount-banner">
+      <span class="amount-label">Amount Transacted</span>
+      <h1 
+        class="amount-value" 
+        [class.text-credit]="tx.type === 'CREDIT' || tx.type === 'EXCHANGE_IN'"
+        [class.text-debit]="tx.type === 'DEBIT' || tx.type === 'EXCHANGE_OUT'">
+        {{ tx.type === 'CREDIT' || tx.type === 'EXCHANGE_IN' ? '+' : '-' }}
+        {{ getCurrencySymbol(tx.currency) }}{{ tx.amount | number:'1.2-2' }}
+      </h1>
+      <span class="amount-currency">{{ tx.currency }} ({{ getCurrencyName(tx.currency) }})</span>
+    </div>
+
+    <!-- Receipt Specifications Table -->
+    <div class="receipt-specs">
+      <div class="spec-row">
+        <span class="spec-label">Transaction ID</span>
+        <span class="spec-value">{{ tx.id }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Account Number</span>
+        <span class="spec-value">#{{ tx.accountId }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Transaction Type</span>
+        <span class="spec-value badge" [class.badge-credit]="tx.type === 'CREDIT' || tx.type === 'EXCHANGE_IN'" [class.badge-debit]="tx.type === 'DEBIT' || tx.type === 'EXCHANGE_OUT'">
+          {{ tx.type }}
+        </span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Timestamp</span>
+        <span class="spec-value">{{ tx.timestamp | date:'medium' }}</span>
+      </div>
+      <div class="spec-row" *ngIf="tx.referenceId">
+        <span class="spec-label">Reference UUID</span>
+        <span class="spec-value ref-uuid">{{ tx.referenceId }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Description</span>
+        <span class="spec-value">{{ tx.description || 'N/A' }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Post-Balance</span>
+        <span class="spec-value font-mono">{{ getCurrencySymbol(tx.currency) }}{{ tx.balanceAfter | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="receipt-actions">
+      <button (click)="exportToPdf(tx)" class="btn-aura w-100">
+        <i class="bi bi-file-earmark-pdf"></i> Download PDF Receipt
+      </button>
+    </div>
+  </div>
+
+</div>

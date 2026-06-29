@@ -1,0 +1,126 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  position: sticky;
+  top: 15px;
+  z-index: 1000;
+  margin: 15px 20px;
+  padding: 15px 30px;
+  border-radius: var(--radius-md) !important;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  
+  .logo-icon {
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .logo-text {
+    font-size: 1.4rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+    color: var(--accent-primary);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    .logo-light {
+      color: var(--text-primary);
+      -webkit-text-fill-color: var(--text-primary);
+    }
+  }
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+
+  a {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    
+    &:hover, &.active {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+.user-profile-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .picker-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    i {
+      font-size: 1.1rem;
+      color: var(--accent-primary);
+    }
+  }
+
+  .user-dropdown {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: var(--transition);
+
+    &:focus {
+      border-color: var(--accent-primary);
+    }
+  }
+}
+
+.app-content {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 30px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border-glass);
+  margin-top: 50px;
+}

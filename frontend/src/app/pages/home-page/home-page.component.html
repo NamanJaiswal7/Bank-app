@@ -1,0 +1,109 @@
+<div class="home-page-container">
+  
+  <!-- Hero Section -->
+  <section class="hero-section glass-panel" *ngIf="selectedUser$ | async as user">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="welcome-title">Welcome back, <span class="glow-text">{{ user.username }}</span></h1>
+        <p class="welcome-subtitle">Manage your currencies, perform instant exchanges, and track your global assets.</p>
+        <span class="user-meta"><i class="bi bi-envelope"></i> {{ user.email }}</span>
+      </div>
+      <div class="hero-badge">
+        <i class="bi bi-shield-check"></i> Aura Premium Secure
+      </div>
+    </div>
+  </section>
+
+  <!-- Error Alert -->
+  <div class="error-alert glass-panel" *ngIf="error$ | async as error">
+    <span class="error-icon"><i class="bi bi-exclamation-triangle"></i></span>
+    <span class="error-message">{{ error }}</span>
+  </div>
+
+  <!-- Accounts & Creation Section -->
+  <div class="dashboard-grid">
+    <!-- Accounts List -->
+    <div class="accounts-section">
+      <div class="section-header">
+        <h2 class="section-title">Your Assets</h2>
+        <span class="accounts-count" *ngIf="accounts$ | async as accounts">{{ accounts.length }} Accounts</span>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-state" *ngIf="loading$ | async">
+        <div class="spinner"></div>
+        <p>Loading accounts...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state glass-panel" *ngIf="!(loading$ | async) && (accounts$ | async)?.length === 0">
+        <i class="bi bi-wallet2 empty-icon"></i>
+        <h3>No accounts found</h3>
+        <p>Create a new account in your preferred currency to get started.</p>
+      </div>
+
+      <!-- Accounts Grid -->
+      <div class="accounts-grid" *ngIf="!(loading$ | async)">
+        <div 
+          class="account-card glass-panel" 
+          *ngFor="let account of accounts$ | async" 
+          (click)="onAccountClick(account.id)">
+          <div class="card-glow"></div>
+          <div class="card-header">
+            <div class="currency-info">
+              <span class="currency-symbol">{{ getCurrencySymbol(account.currency) }}</span>
+              <div>
+                <h4 class="currency-code">{{ account.currency }}</h4>
+                <p class="currency-name">{{ getCurrencyName(account.currency) }}</p>
+              </div>
+            </div>
+            <span class="account-number">ID: {{ account.id }}</span>
+          </div>
+
+          <div class="card-body">
+            <span class="balance-label">Available Balance</span>
+            <h2 class="balance-value">
+              {{ getCurrencySymbol(account.currency) }}{{ account.balance | number:'1.2-2' }}
+            </h2>
+          </div>
+
+          <div class="card-footer">
+            <span class="card-action">View Activity <i class="bi bi-arrow-right"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Account Side Panel -->
+    <div class="create-section" *ngIf="selectedUserId$ | async as userId">
+      <div class="create-card glass-panel">
+        <h3 class="create-title">Open New Account</h3>
+        <p class="create-desc">Expand your portfolio by opening a new account in standard global currencies.</p>
+
+        <form (ngSubmit)="onCreateAccount(userId)" #createForm="ngForm">
+          <div class="form-group">
+            <label for="currencySelect" class="form-label">Select Currency</label>
+            <select 
+              id="currencySelect" 
+              name="currency" 
+              class="form-input" 
+              [(ngModel)]="newAccountCurrency">
+              <option *ngFor="let curr of currencies" [value]="curr">
+                {{ curr }} - {{ getCurrencyName(curr) }}
+              </option>
+            </select>
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn-aura w-100" 
+            [disabled]="actionLoading$ | async">
+            <span class="spinner-sm" *ngIf="actionLoading$ | async"></span>
+            <span>{{ (actionLoading$ | async) ? 'Opening Account...' : 'Open Account' }}</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>

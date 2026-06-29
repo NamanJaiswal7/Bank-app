@@ -1,0 +1,40 @@
+<div class="app-container">
+  <!-- Brand Header -->
+  <header class="app-header glass-panel">
+    <div class="header-content">
+      <div class="brand" routerLink="/">
+        <span class="logo-icon"><i class="bi bi-wallet2"></i></span>
+        <span class="logo-text">AURA<span class="logo-light">BANK</span></span>
+      </div>
+
+      <nav class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      </nav>
+
+      <div class="user-profile-picker">
+        <label for="userSelect" class="picker-label"><i class="bi bi-person-circle"></i> Active User:</label>
+        <select 
+          id="userSelect" 
+          class="user-dropdown" 
+          [value]="(selectedUserId$ | async) ?? ''" 
+          (change)="onUserChange($event)">
+          <option *ngFor="let user of users$ | async" [value]="user.id">
+            {{ user.username }} ({{ user.email }})
+          </option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Viewport -->
+  <main class="app-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Premium Footer -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>&copy; 2026 AuraBank. Designed for scale and visual excellence.</p>
+    </div>
+  </footer>
+</div>
