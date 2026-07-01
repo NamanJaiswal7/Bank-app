@@ -1,5 +1,5 @@
 import { createActionGroup, props, emptyProps } from '@ngrx/store';
-import { Transaction } from '../../core/models/bank.models';
+import { Transaction, ApiError } from '../../core/models/bank.models';
 
 export const TransactionActions = createActionGroup({
   source: 'Transaction API',
@@ -13,11 +13,11 @@ export const TransactionActions = createActionGroup({
       totalPages: number;
       last: boolean;
     }>(),
-    'Load Transactions Failure': props<{ error: string }>(),
+    'Load Transactions Failure': props<{ error: ApiError }>(),
 
     'Load Transaction Detail': props<{ transactionId: number }>(),
     'Load Transaction Detail Success': props<{ transaction: Transaction }>(),
-    'Load Transaction Detail Failure': props<{ error: string }>(),
+    'Load Transaction Detail Failure': props<{ error: ApiError }>(),
 
     'Clear Transactions': emptyProps(),
   }

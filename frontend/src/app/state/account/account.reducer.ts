@@ -1,13 +1,13 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { Account } from '../../core/models/bank.models';
+import { Account, ApiError } from '../../core/models/bank.models';
 import { AccountActions } from './account.actions';
 
 export interface AccountState extends EntityState<Account> {
   selectedAccountId: number | null;
   loading: boolean;
   actionLoading: boolean;
-  error: string | null;
+  error: ApiError | null;
 }
 
 export const accountAdapter: EntityAdapter<Account> = createEntityAdapter<Account>();

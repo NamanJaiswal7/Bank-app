@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ApiService } from '../../core/services/api.service';
 import { TransactionActions } from './transaction.actions';
 import { AccountActions } from '../account/account.actions';
+import { toApiError } from '../../core/interceptors/error.interceptor';
 import { catchError, map, mergeMap, of } from 'rxjs';
 
 @Injectable()
@@ -25,7 +26,7 @@ export class TransactionEffects {
               last: res.last
             })
           ),
-          catchError((err) => of(TransactionActions.loadTransactionsFailure({ error: err.message })))
+          catchError((err) => of(TransactionActions.loadTransactionsFailure({ error: toApiError(err) })))
         )
       )
     )
@@ -37,7 +38,7 @@ export class TransactionEffects {
       mergeMap(({ transactionId }) =>
         this.apiService.getTransaction(transactionId).pipe(
           map((transaction) => TransactionActions.loadTransactionDetailSuccess({ transaction })),
-          catchError((err) => of(TransactionActions.loadTransactionDetailFailure({ error: err.message })))
+          catchError((err) => of(TransactionActions.loadTransactionDetailFailure({ error: toApiError(err) })))
         )
       )
     )

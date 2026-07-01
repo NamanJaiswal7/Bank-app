@@ -5,12 +5,12 @@ import { Store } from '@ngrx/store';
 import { UserActions } from './state/user/user.actions';
 import { AccountActions } from './state/account/account.actions';
 import { selectAllUsers, selectSelectedUserId } from './state/user/user.selectors';
-import { map } from 'rxjs/operators';
+import { NotificationHostComponent } from './core/components/notification-host/notification-host.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, AsyncPipe, NgFor],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, AsyncPipe, NgFor, NotificationHostComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

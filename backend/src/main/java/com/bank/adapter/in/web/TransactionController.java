@@ -7,7 +7,9 @@ import com.bank.application.port.in.ExchangeUseCase;
 import com.bank.application.port.in.TransactionQueryUseCase;
 import com.bank.domain.model.Transaction;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Validated
 public class TransactionController {
 
     private final ExchangeUseCase exchangeUseCase;
@@ -33,7 +36,7 @@ public class TransactionController {
     }
 
     @GetMapping("/transactions/{id}")
-    public TransactionResponse getTransaction(@PathVariable Long id) {
+    public TransactionResponse getTransaction(@PathVariable @Positive Long id) {
         return toResponse(transactionQueryUseCase.getTransaction(id));
     }
 

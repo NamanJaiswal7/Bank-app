@@ -10,6 +10,7 @@ import com.bank.application.port.out.TransactionRepositoryPort;
 import com.bank.application.port.out.UserRepositoryPort;
 import com.bank.domain.event.AccountCreatedEvent;
 import com.bank.domain.exception.AccountNotFoundException;
+import com.bank.domain.exception.UserNotFoundException;
 import com.bank.domain.model.Account;
 import com.bank.domain.model.Currency;
 import com.bank.domain.model.Transaction;
@@ -44,7 +45,7 @@ public class AccountService implements AccountUseCase {
     @Override
     public Account createAccount(Long userId, Currency currency) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         Account saved = accountRepository.save(Account.open(userId, currency));
 

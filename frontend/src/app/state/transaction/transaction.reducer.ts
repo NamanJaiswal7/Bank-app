@@ -1,12 +1,12 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { Transaction } from '../../core/models/bank.models';
+import { Transaction, ApiError } from '../../core/models/bank.models';
 import { TransactionActions } from './transaction.actions';
 
 export interface TransactionState extends EntityState<Transaction> {
   selectedTransactionId: number | null;
   loading: boolean;
-  error: string | null;
+  error: ApiError | null;
   page: number;
   size: number;
   totalElements: number;

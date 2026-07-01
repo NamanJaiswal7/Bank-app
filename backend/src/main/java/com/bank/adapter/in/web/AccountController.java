@@ -9,9 +9,11 @@ import com.bank.domain.model.Account;
 import com.bank.domain.model.Currency;
 import com.bank.domain.model.Transaction;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,34 +22,37 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Validated
 public class AccountController {
 
     private final AccountUseCase accountUseCase;
     private final TransactionQueryUseCase transactionQueryUseCase;
 
     @GetMapping("/users/{userId}/accounts")
-    public List<AccountResponse> getUserAccounts(@PathVariable Long userId) {
+    public List<AccountResponse> getUserAccounts(@PathVariable @Positive Long userId) {
         return accountUseCase.getAccountsByUser(userId).stream()
                 .map(this::toResponse).collect(Collectors.toList());
     }
 
     @PostMapping("/users/{userId}/accounts")
     public ResponseEntity<AccountResponse> createAccount(
-            @PathVariable Long userId,
+            @PathVariable @Positive Long userId,
             @Valid @RequestBody CreateAccountRequest request) {
-        Currency currency = Currency.valueOf(request.getCurrency().toUpperCase());
+        // Currency.fromString throws InvalidCurrencyException (400 with a stable
+        // error code) rather than the raw IllegalArgumentException from valueOf().
+        Currency currency = Currency.fromString(request.getCurrency());
         Account account = accountUseCase.createAccount(userId, currency);
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(account));
     }
 
     @GetMapping("/accounts/{id}")
-    public AccountResponse getAccount(@PathVariable Long id) {
+    public AccountResponse getAccount(@PathVariable @Positive Long id) {
         return toResponse(accountUseCase.getAccount(id));
     }
 
     @PostMapping("/accounts/{id}/credit")
     public TransactionResponse credit(
-            @PathVariable Long id,
+            @PathVariable @Positive Long id,
             @Valid @RequestBody CreditRequest request) {
         CreditCommand command = CreditCommand.builder()
                 .accountId(id).amount(request.getAmount()).build();
@@ -56,7 +61,7 @@ public class AccountController {
 
     @PostMapping("/accounts/{id}/debit")
     public TransactionResponse debit(
-            @PathVariable Long id,
+            @PathVariable @Positive Long id,
             @Valid @RequestBody DebitRequest request) {
         DebitCommand command = DebitCommand.builder()
                 .accountId(id).amount(request.getAmount()).build();
@@ -65,9 +70,9 @@ public class AccountController {
 
     @GetMapping("/accounts/{id}/transactions")
     public TransactionPageResponse getTransactions(
-            @PathVariable Long id,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @PathVariable @Positive Long id,
+            @RequestParam(defaultValue = "0") @jakarta.validation.constraints.PositiveOrZero int page,
+            @RequestParam(defaultValue = "20") @jakarta.validation.constraints.Positive int size) {
         List<Transaction> transactions = transactionQueryUseCase
                 .getTransactionsByAccount(id, page, size);
         long total = transactionQueryUseCase.countTransactionsByAccount(id);

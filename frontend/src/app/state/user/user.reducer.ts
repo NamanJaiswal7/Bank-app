@@ -1,12 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
-import { User } from '../../core/models/bank.models';
+import { User, ApiError } from '../../core/models/bank.models';
 import { UserActions } from './user.actions';
 
 export interface UserState {
   users: User[];
   selectedUserId: number | null;
   loading: boolean;
-  error: string | null;
+  error: ApiError | null;
 }
 
 export const initialUserState: UserState = {

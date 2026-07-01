@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ApiService } from '../../core/services/api.service';
 import { AccountActions } from './account.actions';
+import { toApiError } from '../../core/interceptors/error.interceptor';
 import { catchError, map, mergeMap, of } from 'rxjs';
 
 @Injectable()
@@ -15,7 +16,7 @@ export class AccountEffects {
       mergeMap(({ userId }) =>
         this.apiService.getUserAccounts(userId).pipe(
           map((accounts) => AccountActions.loadAccountsSuccess({ accounts })),
-          catchError((err) => of(AccountActions.loadAccountsFailure({ error: err.message })))
+          catchError((err) => of(AccountActions.loadAccountsFailure({ error: toApiError(err) })))
         )
       )
     )
@@ -27,7 +28,7 @@ export class AccountEffects {
       mergeMap(({ userId, currency }) =>
         this.apiService.createAccount(userId, { currency }).pipe(
           map((account) => AccountActions.createAccountSuccess({ account })),
-          catchError((err) => of(AccountActions.createAccountFailure({ error: err.message })))
+          catchError((err) => of(AccountActions.createAccountFailure({ error: toApiError(err) })))
         )
       )
     )
@@ -39,7 +40,7 @@ export class AccountEffects {
       mergeMap(({ accountId }) =>
         this.apiService.getAccount(accountId).pipe(
           map((account) => AccountActions.loadAccountDetailSuccess({ account })),
-          catchError((err) => of(AccountActions.loadAccountDetailFailure({ error: err.message })))
+          catchError((err) => of(AccountActions.loadAccountDetailFailure({ error: toApiError(err) })))
         )
       )
     )
@@ -51,7 +52,7 @@ export class AccountEffects {
       mergeMap(({ accountId, amount }) =>
         this.apiService.creditAccount(accountId, { amount }).pipe(
           map((tx) => AccountActions.creditAccountSuccess({ accountId: tx.accountId, balanceAfter: tx.balanceAfter })),
-          catchError((err) => of(AccountActions.creditAccountFailure({ error: err.message })))
+          catchError((err) => of(AccountActions.creditAccountFailure({ error: toApiError(err) })))
         )
       )
     )
@@ -63,7 +64,7 @@ export class AccountEffects {
       mergeMap(({ accountId, amount }) =>
         this.apiService.debitAccount(accountId, { amount }).pipe(
           map((tx) => AccountActions.debitAccountSuccess({ accountId: tx.accountId, balanceAfter: tx.balanceAfter })),
-          catchError((err) => of(AccountActions.debitAccountFailure({ error: err.message })))
+          catchError((err) => of(AccountActions.debitAccountFailure({ error: toApiError(err) })))
         )
       )
     )
@@ -86,7 +87,7 @@ export class AccountEffects {
               targetBalanceAfter: targetTx.balanceAfter
             });
           }),
-          catchError((err) => of(AccountActions.exchangeFundsFailure({ error: err.message })))
+          catchError((err) => of(AccountActions.exchangeFundsFailure({ error: toApiError(err) })))
         )
       )
     )

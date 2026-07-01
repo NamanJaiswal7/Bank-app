@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 @Getter @NoArgsConstructor @AllArgsConstructor
 public class DebitRequest {
-    @NotNull @Positive
+    @NotNull(message = "amount is required")
+    @Positive(message = "amount must be greater than zero")
     private BigDecimal amount;
 }

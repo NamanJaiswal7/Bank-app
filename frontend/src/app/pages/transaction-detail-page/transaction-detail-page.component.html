@@ -17,7 +17,7 @@
   <!-- Error Alert -->
   <div class="error-alert glass-panel" *ngIf="error$ | async as error">
     <span class="error-icon"><i class="bi bi-exclamation-triangle"></i></span>
-    <span class="error-message">{{ error }}</span>
+    <span class="error-message">{{ error.message }}</span>
   </div>
 
   <!-- Receipt Card -->
